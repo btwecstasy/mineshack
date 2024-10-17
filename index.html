@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines Signal</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a; /* Темный фон */
+            color: #fff;
+        }
+        .game-container {
+            text-align: center;
+            background-color: #2a2a2a; /* Темный фон контейнера */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #3a3a3a; /* Темный цвет ячеек */
+            border: 1px solid #4a4a4a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 5px; /* Закругленные края */
+        }
+        .cell.revealed {
+            background-color: #00008b; /* Темно-синий цвет */
+            color: #ffcc00; /* Желтый цвет для звездочки */
+            animation: reveal 0.5s ease;
+            font-size: 24px; /* Увеличенный размер шрифта для звезд */
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: #ffcc00; /* Желтый цвет кнопок */
+            color: #333;
+        }
+        .controls button:hover {
+            background-color: #ffa500; /* Светло-желтый цвет при наведении */
+        }
+        .controls button#signal-button {
+            background-color: #ffcc00;
+            color: #333;
+            border-radius: 20px; /* Закругленные края */
+            padding: 15px 30px;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .controls button#signal-button:hover {
+            background-color: #ffa500;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes reveal {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Mines Signal</h1>
+        <div class="grid"></div>
+        <div class="controls">
+            <button id="decrease-traps">-</button>
+            <span id="trap-count">3</span>
+            <button id="increase-traps">+</button>
+        </div>
+        <button id="signal-button">Получить сигнал</button>
+    </div>
+
+    <script>
+        const gridSize = 5;
+        let trapCount = 3;
+        let grid = [];
+
+        function createGrid() {
+            const gridElement = document.querySelector('.grid');
+            gridElement.innerHTML = '';
+            grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    gridElement.appendChild(cell);
+                }
+            }
+        }
+
+        function updateTrapCount(count) {
+            trapCount = count;
+            document.getElementById('trap-count').textContent = trapCount;
+        }
+
+        function getRandomCells(count) {
+            const cells = [];
+            while (cells.length < count) {
+                const row = Math.floor(Math.random() * gridSize);
+                const col = Math.floor(Math.random() * gridSize);
+                const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                if (!cell.classList.contains('revealed')) {
+                    cells.push(cell);
+                }
+            }
+            return cells;
+        }
+
+        function revealStars() {
+            clearGrid();
+            let starsCount;
+            if (trapCount === 1 || trapCount === 3) {
+                starsCount = 5;
+            } else if (trapCount === 5) {
+                starsCount = 4;
+            } else if (trapCount === 7) {
+                starsCount = 3;
+            }
+            const stars = getRandomCells(starsCount);
+            stars.forEach(cell => {
+                cell.classList.add('revealed');
+                cell.textContent = '★'; // Звездочка
+            });
+        }
+
+        function clearGrid() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.classList.remove('revealed');
+                cell.textContent = '';
+            });
+        }
+
+        document.getElementById('decrease-traps').addEventListener('click', () => {
+            if (trapCount > 1) {
+                trapCount -= 2;
+                if (trapCount < 1) trapCount = 1;
+                updateTrapCount(trapCount);
+            }
+        });
+
+        document.getElementById('increase-traps').addEventListener('click', () => {
+            if (trapCount < 7) {
+                trapCount += 2;
+                if (trapCount > 7) trapCount = 7;
+                updateTrapCount(trapCount);
+            }
+        });
+
+        document.getElementById('signal-button').addEventListener('click', () => {
+            revealStars();
+        });
+
+        createGrid();
+    </script>
+</body>
+</html>

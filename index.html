@@ -20,6 +20,14 @@
         </div>
         <button id="get-signal">Получить сигнал</button>
     </div>
+    <audio id="starSound" src="star-sound.mp3"></audio>
     <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.expand();
+            }
+        };
+    </script>
 </body>
 </html>

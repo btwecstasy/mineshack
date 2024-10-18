@@ -3,6 +3,11 @@ const decreaseButton = document.getElementById('decrease');
 const increaseButton = document.getElementById('increase');
 const trapCountSpan = document.getElementById('trap-count');
 const getSignalButton = document.getElementById('get-signal');
+const trapLabel = document.getElementById('trapLabel');
+const title = document.getElementById('title');
+const languageModal = document.getElementById('languageModal');
+const languageButtons = document.querySelectorAll('.language-button');
+
 const rows = 5;
 const cols = 5;
 
@@ -81,5 +86,25 @@ increaseButton.addEventListener('click', () => {
 getSignalButton.addEventListener('click', () => {
     revealStars();
 });
+
+languageButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const lang = button.dataset.lang;
+        setLanguage(lang);
+        languageModal.style.display = 'none';
+    });
+});
+
+function setLanguage(lang) {
+    if (lang === 'en') {
+        title.textContent = 'Mines Hack';
+        trapLabel.textContent = 'Number of Traps';
+        getSignalButton.textContent = 'Get Signal';
+    } else if (lang === 'ru') {
+        title.textContent = 'Mines Hack';
+        trapLabel.textContent = 'кол-во ловушек';
+        getSignalButton.textContent = 'Получить сигнал';
+    }
+}
 
 createBoard();

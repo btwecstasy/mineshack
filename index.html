@@ -7,11 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="language-modal" id="languageModal">
+        <div class="modal-content">
+            <h2>Choose Language</h2>
+            <button class="language-button" data-lang="en">English</button>
+            <button class="language-button" data-lang="ru">Русский</button>
+        </div>
+    </div>
+
     <div class="container">
         <h1 id="title">Mines Hack</h1>
         <div id="game-board"></div>
         <div class="controls">
-            <span class="trap-label">кол-во ловушек</span>
+            <span class="trap-label" id="trapLabel">кол-во ловушек</span>
             <div class="buttons">
                 <button id="decrease">-</button>
                 <span id="trap-count">1</span>
@@ -20,14 +28,6 @@
         </div>
         <button id="get-signal">Получить сигнал</button>
     </div>
-    <audio id="starSound" src="star-sound.mp3"></audio>
     <script src="script.js"></script>
-    <script>
-        window.onload = function() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.expand();
-            }
-        };
-    </script>
 </body>
 </html>
